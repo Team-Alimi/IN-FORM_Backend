@@ -19,6 +19,7 @@ public class ArticleResponseDto {
     private final String vendorName;
     private final String categoryName;
 
+    //생성자로 기존 값들 복사
     public ArticleResponseDto(Article article) {
         this.articleId = article.getArticleId();
         this.title = article.getTitle();
