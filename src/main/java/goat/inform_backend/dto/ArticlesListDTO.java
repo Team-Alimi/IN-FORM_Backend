@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Getter
 public class ArticlesListDTO {
+    private final Integer article_id;
     private final String title;
     private final LocalDate start_at;
     private final LocalDate end_at;
@@ -16,6 +17,7 @@ public class ArticlesListDTO {
     private final String category_name;
 
     public ArticlesListDTO(Articles articles) {
+        this.article_id = articles.getArticleId();
         this.title = articles.getTitle();
         this.start_at = articles.getStartDate();
         this.end_at = articles.getDueDate();

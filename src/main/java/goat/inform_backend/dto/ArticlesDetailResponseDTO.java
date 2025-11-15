@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Getter
 public class ArticlesDetailResponseDTO {
-    private final Integer articleId;
+    private final Integer article_id;
     private final String title;
     private final String content;
     private final String original_url;
@@ -18,7 +18,7 @@ public class ArticlesDetailResponseDTO {
     private final String category_name;
 
     public ArticlesDetailResponseDTO(Articles articles) {
-        this.articleId = articles.getArticleId();
+        this.article_id = articles.getArticleId();
         this.title = articles.getTitle();
         this.content = articles.getContent();
         this.original_url = articles.getOriginalUrl();

@@ -3,6 +3,7 @@ package goat.inform_backend.service;
 import goat.inform_backend.dto.ArticlesListDTO;
 import goat.inform_backend.dto.ArticlePageResponseDTO;
 import goat.inform_backend.dto.PaginationDTO;
+import goat.inform_backend.dto.ArticlesDetailResponseDTO;
 import goat.inform_backend.entity.articles.Articles;
 import goat.inform_backend.entity.vendors.VendorType;
 import goat.inform_backend.repository.ArticlesRepository;
@@ -46,7 +47,18 @@ public class ArticleService {
         return new ArticlePageResponseDTO(paginationDto, dtoList);
     }
 
+    /**
+     * 게시글 상세보기
+     * [GET /api/v1/articles/{id}]
+     */
+    @Transactional(readOnly = true)
+    public ArticlesDetailResponseDTO getArticleById(Integer id) {
 
+        Articles article = articlesRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
+
+        return new ArticlesDetailResponseDTO(article);
+    }
 
     private Page<Articles> getArticles(String option, Pageable pageable) {
         Page<Articles> articlePage;
