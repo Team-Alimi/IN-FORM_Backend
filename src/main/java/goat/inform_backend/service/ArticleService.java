@@ -28,10 +28,10 @@ public class ArticleService {
      * 게시글 목록보기 (페이지 + 필터링 + 검색)
      * [GET /api/v1/articles?page=1&size=10&option=SCHOOL]
      */
-    public ArticlePageResponseDTO getArticlesByOption(int page, int size, String option, String search) {
+    public ArticlePageResponseDTO getArticlesByOption(int page, int size, String option, String search,String category) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Articles> articlePage = getArticles(option,search,pageable);
+        Page<Articles> articlePage = getArticles(option,search,category,pageable);
 
         List<ArticlesListDTO> dtoList = articlePage.getContent().stream()
                 .map(ArticlesListDTO::new)
@@ -60,8 +60,14 @@ public class ArticleService {
         return new ArticlesDetailResponseDTO(article);
     }
 
-    private Page<Articles> getArticles(String option, String search, Pageable pageable) {
+    private Page<Articles> getArticles(String option, String search, String category,Pageable pageable) {
         boolean hasSearchString = (search != null && !search.isBlank());
+        boolean hasCategory = (category != null && !category.isBlank());
+        if (hasCategory) {
+            return articlesRepository.findByVendors_VendorTypeAndCategories_CategoryName(
+                    VendorType.SCHOOL, category, pageable
+            );
+        }
 
         if (option.equalsIgnoreCase("ALL")) {
             if (hasSearchString) {
