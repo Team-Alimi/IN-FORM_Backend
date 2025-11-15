@@ -66,7 +66,7 @@ public class ArticleService {
      * 특정일에 해당하는 게시글 목록 조회
      * [GET /api/v1/articles/monthly?date=...&option=...]
      */
-    public List<ArticlesListDTO> getArticlesByDate(LocalDate date, String option) {
+    public ArticlePageResponseDTO getArticlesByDate(LocalDate date, String option) {
         List<Articles> articleList;
 
         if (option.equalsIgnoreCase("ALL")) {
@@ -77,9 +77,16 @@ public class ArticleService {
             articleList = articlesRepository.findByMonthAndVendors_VendorType(date, type);
         }
 
-        return articleList.stream()
+        List<ArticlesListDTO> dtoList = articleList.stream()
                 .map(ArticlesListDTO::new)
-                .collect(Collectors.toList());
+                .toList();
+
+        PaginationDTO paginationDto = new PaginationDTO(
+                1,
+                1,
+                dtoList.size()
+        );
+        return new ArticlePageResponseDTO(paginationDto, dtoList);
     }
 
     private Page<Articles> getArticles(String option, String search, String category,Pageable pageable) {
