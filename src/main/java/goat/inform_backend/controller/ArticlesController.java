@@ -1,13 +1,11 @@
 package goat.inform_backend.controller; // ⭐️ (1. 새로운 controller 패키지)
 
 import goat.inform_backend.dto.ArticlePageResponseDTO;
+import goat.inform_backend.dto.ArticlesDetailResponseDTO;
 import goat.inform_backend.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +14,7 @@ public class ArticlesController {
 
     private final ArticleService articleService;
     /**
-     * '게시글 목록보기' API
+     * 게시글 목록보기 API
      * 예시: GET /api/v1/articles?page=1&size=20&option=ALL
      * 예시: GET /api/v1/articles?page=2&size=20&option=CLUB
      */
@@ -30,4 +28,15 @@ public class ArticlesController {
         return ResponseEntity.ok(responseDto);
     }
 
+    /**
+     * '게시글 상세보기' API
+     * 예시: GET /api/v1/articles/1
+     */
+    @GetMapping("/{articleId}") // " /api/v1/articles/숫자 " 형태의 GET 요청
+    public ResponseEntity<ArticlesDetailResponseDTO> getArticleDetail(
+            @PathVariable Integer articleId
+    ) {
+        ArticlesDetailResponseDTO responseDto = articleService.getArticleById(articleId);
+        return ResponseEntity.ok(responseDto);
+    }
 }
