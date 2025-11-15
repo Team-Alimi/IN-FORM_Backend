@@ -15,10 +15,10 @@ public class Vendors {
     @Column(name = "vendor_id")
     private Integer vendorId; // 스키마의 int는 Java의 Integer와 매핑
 
-    @Column(name = "vendor_name", nullable = false, length = 100)
+    @Column(name = "vendor_name", unique = true, nullable = false, length = 100)
     private String vendorName;
 
     @Enumerated(EnumType.STRING) // Enum 값을 DB에 '이름' 그대로(SCHOOL, CLUB) 저장
-    @Column(name = "vendor_type",unique = true,nullable = false)
+    @Column(name = "vendor_type",nullable = false)
     private VendorType vendorType;
 }
