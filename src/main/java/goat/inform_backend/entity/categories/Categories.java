@@ -15,6 +15,6 @@ public class Categories {
     @Column(name = "category_id")
     private Integer categoryId;
 
-    @Column(name = "category_name", length = 100)
+    @Column(name = "category_name",unique = true, length = 100)
     private String categoryName;
 }
