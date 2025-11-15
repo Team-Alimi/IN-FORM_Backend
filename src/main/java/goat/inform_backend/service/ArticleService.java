@@ -7,6 +7,7 @@ import goat.inform_backend.dto.ArticlesDetailResponseDTO;
 import goat.inform_backend.entity.articles.Articles;
 import goat.inform_backend.entity.vendors.VendorType;
 import goat.inform_backend.repository.ArticlesRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +26,14 @@ public class ArticleService {
 
     private final ArticlesRepository articlesRepository;
     /**
-     * 게시글 목록보기 (페이지 + 필터링)
+     * 게시글 목록보기 (페이지 + 필터링 + 검색)
      * [GET /api/v1/articles?page=1&size=10&option=SCHOOL]
      */
-    public ArticlePageResponseDTO getArticlesByOption(int page, int size, String option) {
+    public ArticlePageResponseDTO getArticlesByOption(int page, int size, String option, String search) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Articles> articlePage;
-        articlePage = getArticles(option, pageable);
+        articlePage = getArticles(option, search,pageable);
 
         List<ArticlesListDTO> dtoList = articlePage.getContent().stream()
                 .map(ArticlesListDTO::new)
@@ -60,15 +62,24 @@ public class ArticleService {
         return new ArticlesDetailResponseDTO(article);
     }
 
-    private Page<Articles> getArticles(String option, Pageable pageable) {
-        Page<Articles> articlePage;
+    private Page<Articles> getArticles(String option, String search,Pageable pageable) {
+        boolean hasSearchString = (search != null && !search.isBlank());
         if (option.equalsIgnoreCase("ALL")) {
-            articlePage = articlesRepository.findAll(pageable);
-            return articlePage;
+            if (hasSearchString) {
+                // 상황 1 검색O + ALL
+                return articlesRepository.findByTitleContaining(search, pageable);
+            }
+                // 상황 2: 검색X + ALL
+            return articlesRepository.findAll(pageable);
         }
 
         VendorType type = VendorType.valueOf(option.toUpperCase());
-        articlePage = articlesRepository.findByVendors_VendorType(type, pageable);
-        return articlePage;
+        if (hasSearchString) {
+            // 상황 3: 검색O + (SCHOOL/CLUB)
+            return articlesRepository.findByTitleContainingAndVendors_VendorType(search, type, pageable);
+        }
+            // (상황 4) 검색X + (SCHOOL/CLUB)
+        return articlesRepository.findByVendors_VendorType(type, pageable);
+
     }
 }

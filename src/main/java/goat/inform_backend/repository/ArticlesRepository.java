@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticlesRepository extends JpaRepository<Articles,Integer>{
     Page<Articles> findByVendors_VendorType(VendorType vendorType, Pageable pageable);
+    Page<Articles> findByTitleContaining(String search, Pageable pageable);
+    Page<Articles> findByTitleContainingAndVendors_VendorType(String search, VendorType type, Pageable pageable);
 }
