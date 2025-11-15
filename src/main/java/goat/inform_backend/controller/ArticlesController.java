@@ -1,6 +1,7 @@
 package goat.inform_backend.controller; // ⭐️ (1. 새로운 controller 패키지)
 
 import goat.inform_backend.dto.ArticlePageResponseDTO;
+import goat.inform_backend.dto.ArticlesDetailDTO;
 import goat.inform_backend.dto.ArticlesDetailResponseDTO;
 import goat.inform_backend.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,8 @@ public class ArticlesController {
     public ResponseEntity<ArticlesDetailResponseDTO> getArticleDetail(
             @PathVariable Integer articleId
     ) {
-        ArticlesDetailResponseDTO responseDto = articleService.getArticleById(articleId);
-        return ResponseEntity.ok(responseDto);
+        ArticlesDetailDTO detailData = articleService.getArticleById(articleId);
+        ArticlesDetailResponseDTO response = new ArticlesDetailResponseDTO(detailData);
+        return ResponseEntity.ok(response);
     }
 }

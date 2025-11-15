@@ -3,7 +3,7 @@ package goat.inform_backend.service;
 import goat.inform_backend.dto.ArticlesListDTO;
 import goat.inform_backend.dto.ArticlePageResponseDTO;
 import goat.inform_backend.dto.PaginationDTO;
-import goat.inform_backend.dto.ArticlesDetailResponseDTO;
+import goat.inform_backend.dto.ArticlesDetailDTO;
 import goat.inform_backend.entity.articles.Articles;
 import goat.inform_backend.entity.vendors.VendorType;
 import goat.inform_backend.repository.ArticlesRepository;
@@ -53,12 +53,12 @@ public class ArticleService {
      * [GET /api/v1/articles/{id}]
      */
     @Transactional(readOnly = true)
-    public ArticlesDetailResponseDTO getArticleById(Integer id) {
+    public ArticlesDetailDTO getArticleById(Integer id) {
 
         Articles article = articlesRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
 
-        return new ArticlesDetailResponseDTO(article);
+        return new ArticlesDetailDTO(article);
     }
 
     /**
