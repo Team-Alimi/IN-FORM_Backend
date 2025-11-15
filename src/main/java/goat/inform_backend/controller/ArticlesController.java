@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/articles") //request 형식
-public class    ArticlesController {
+public class ArticlesController {
 
     private final ArticleService articleService;
     /**
@@ -23,9 +23,10 @@ public class    ArticlesController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
             @RequestParam(name = "option", defaultValue = "ALL") String option,
-            @RequestParam(name = "search", required = false) String search
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "category", required = false) String category
     ){
-        ArticlePageResponseDTO responseDto = articleService.getArticlesByOption(page, size, option,search);
+        ArticlePageResponseDTO responseDto = articleService.getArticlesByOption(page, size, option,search,category);
         return ResponseEntity.ok(responseDto);
     }
     /**
