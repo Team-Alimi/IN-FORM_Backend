@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +59,27 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다. id=" + id));
 
         return new ArticlesDetailResponseDTO(article);
+    }
+
+    /**
+     *
+     * 특정일에 해당하는 게시글 목록 조회
+     * [GET /api/v1/articles/monthly?date=...&option=...]
+     */
+    public List<ArticlesListDTO> getArticlesByDate(LocalDate date, String option) {
+        List<Articles> articleList;
+
+        if (option.equalsIgnoreCase("ALL")) {
+            articleList = articlesRepository.findByMonth(date);
+        }
+        else {
+            VendorType type = VendorType.valueOf(option.toUpperCase());
+            articleList = articlesRepository.findByMonthAndVendors_VendorType(date, type);
+        }
+
+        return articleList.stream()
+                .map(ArticlesListDTO::new)
+                .collect(Collectors.toList());
     }
 
     private Page<Articles> getArticles(String option, String search, String category,Pageable pageable) {
