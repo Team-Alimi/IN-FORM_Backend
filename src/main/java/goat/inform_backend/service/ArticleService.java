@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +31,7 @@ public class ArticleService {
     public ArticlePageResponseDTO getArticlesByOption(int page, int size, String option, String search) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Articles> articlePage;
-        articlePage = getArticles(option, search,pageable);
+        Page<Articles> articlePage = getArticles(option,search,pageable);
 
         List<ArticlesListDTO> dtoList = articlePage.getContent().stream()
                 .map(ArticlesListDTO::new)
@@ -62,8 +60,9 @@ public class ArticleService {
         return new ArticlesDetailResponseDTO(article);
     }
 
-    private Page<Articles> getArticles(String option, String search,Pageable pageable) {
+    private Page<Articles> getArticles(String option, String search, Pageable pageable) {
         boolean hasSearchString = (search != null && !search.isBlank());
+
         if (option.equalsIgnoreCase("ALL")) {
             if (hasSearchString) {
                 // 상황 1 검색O + ALL
