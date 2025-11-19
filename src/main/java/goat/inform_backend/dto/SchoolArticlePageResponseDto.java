@@ -6,7 +6,7 @@ import java.util.List;
 
 @Getter
 public class SchoolArticlePageResponseDto {
-    
+
     private final PageInfo page_info;
     private final List<SchoolArticleListDto> school_articles;
 
