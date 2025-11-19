@@ -5,35 +5,40 @@ import goat.inform_backend.entity.articles.ClubAttachment;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.nio.charset.StandardCharsets;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class ClubArticleListDto {
+public class ClubArticleDetailDto {
+    // Response Param 필드 반영
     private final Integer article_id;
     private final String title;
+    private final String content;
+    private final String original_url;
     private final LocalDate start_date;
     private final LocalDate due_date;
     private final LocalDate created_at;
     private final LocalDate updated_at;
-    private final String attachment_url;
+
+    //URL 전체 목록
+    private final List<String> attachment_urls;
 
     private final VendorResponseDto vendors;
 
-    public ClubArticleListDto(ClubArticles entity) {
+    public ClubArticleDetailDto(ClubArticles entity) {
         this.article_id = entity.getArticleId();
         this.title = entity.getTitle();
+        this.content = entity.getContent();
+        this.original_url = entity.getOriginalUrl();
         this.start_date = entity.getStartDate();
         this.due_date = entity.getDueDate();
         this.created_at = entity.getCreatedAt();
         this.updated_at = entity.getUpdatedAt();
 
-        this.attachment_url = entity.getAttachments().stream()
-                .findFirst()
+        // List<ClubAttachment> -> List<String> URL 목록으로 변환
+        this.attachment_urls = entity.getAttachments().stream()
                 .map(ClubAttachment::getAttachmentUrl)
-                .orElse(null);
+                .collect(Collectors.toList());
 
         this.vendors = new VendorResponseDto(entity.getVendors());
     }

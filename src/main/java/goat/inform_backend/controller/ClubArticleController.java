@@ -1,10 +1,12 @@
 package goat.inform_backend.controller;
 
 import goat.inform_backend.dto.ClubArticlePageResponseDto;
+import goat.inform_backend.dto.ClubArticleDetailDto;
 import goat.inform_backend.service.ClubArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,18 @@ public class ClubArticleController {
     ) {
 
         ClubArticlePageResponseDto responseDto = clubArticleService.getArticleList(page, size, search);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 동아리 게시글 상세 정보 확인하기
+     * [GET /api/v1/club_articles/{article_id}]
+     */
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ClubArticleDetailDto> getArticleDetail(
+            @PathVariable Integer articleId
+    ) {
+        ClubArticleDetailDto responseDto = clubArticleService.getArticleDetail(articleId);
         return ResponseEntity.ok(responseDto);
     }
 }

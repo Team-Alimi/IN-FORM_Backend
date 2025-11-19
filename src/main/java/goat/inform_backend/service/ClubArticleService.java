@@ -2,6 +2,7 @@ package goat.inform_backend.service;
 
 import goat.inform_backend.dto.ClubArticleListDto;
 import goat.inform_backend.dto.ClubArticlePageResponseDto;
+import goat.inform_backend.dto.ClubArticleDetailDto;
 import goat.inform_backend.dto.PageInfo;
 import goat.inform_backend.entity.articles.ClubArticles;
 import goat.inform_backend.repository.ClubArticlesRepository;
@@ -54,5 +55,17 @@ public class ClubArticleService {
         );
 
         return new ClubArticlePageResponseDto(pageInfo, dtoList);
+    }
+
+    /**
+     * 동아리 게시글 상세 정보 확인하기
+     * [GET /api/v1/club_articles/{article_id}]
+     */
+    public ClubArticleDetailDto getArticleDetail(Integer articleId) {
+
+        ClubArticles article = clubArticlesRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. ID=" + articleId));
+
+        return new ClubArticleDetailDto(article);
     }
 }
