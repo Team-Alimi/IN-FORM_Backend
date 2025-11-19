@@ -1,6 +1,7 @@
 package goat.inform_backend.service;
 
 import goat.inform_backend.dto.PageInfo;
+import goat.inform_backend.dto.SchoolArticleDetailDto;
 import goat.inform_backend.dto.SchoolArticleListDto;
 import goat.inform_backend.dto.SchoolArticlePageResponseDto;
 import goat.inform_backend.entity.articles.SchoolArticles;
@@ -64,7 +65,18 @@ public class SchoolArticleService {
                 articlePage.getTotalElements()      // total_articles
         );
 
-
         return new SchoolArticlePageResponseDto(pageInfo, dtoList);
+    }
+
+    /**
+     * 학교 게시글 상세 정보 확인하기
+     * [GET /api/v1/school_articles/{id}]
+     */
+    public SchoolArticleDetailDto getArticleDetail(Integer articleId) {
+
+        SchoolArticles article = schoolArticlesRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. ID=" + articleId));
+
+        return new SchoolArticleDetailDto(article);
     }
 }

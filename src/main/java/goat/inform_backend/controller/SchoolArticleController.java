@@ -1,13 +1,11 @@
 package goat.inform_backend.controller;
 
+import goat.inform_backend.dto.SchoolArticleDetailDto;
 import goat.inform_backend.dto.SchoolArticlePageResponseDto;
 import goat.inform_backend.service.SchoolArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +25,14 @@ public class SchoolArticleController {
             @RequestParam(name = "category", required = false) String category
     ) {
         SchoolArticlePageResponseDto responseDto = schoolArticleService.getArticleList(page, size, search, category);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/{articleId}")
+    public ResponseEntity<SchoolArticleDetailDto> getArticleDetail(
+            @PathVariable Integer articleId
+    ) {
+        SchoolArticleDetailDto responseDto = schoolArticleService.getArticleDetail(articleId);
         return ResponseEntity.ok(responseDto);
     }
 }
