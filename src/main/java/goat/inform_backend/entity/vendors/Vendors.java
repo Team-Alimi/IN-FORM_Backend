@@ -18,7 +18,7 @@ public class Vendors {
     @Column(name = "vendor_name", unique = true, nullable = false, length = 100)
     private String vendorName;
 
-    @Enumerated(EnumType.STRING) // Enum 값을 DB에 '이름' 그대로(SCHOOL, CLUB) 저장
+    @Enumerated(EnumType.STRING) // Enum 값을 DB에 그대로(SCHOOL, CLUB) 저장
     @Column(name = "vendor_type",nullable = false)
     private VendorType vendorType;
 }
