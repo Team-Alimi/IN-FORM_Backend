@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.YearMonth;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/monthly")
@@ -22,10 +24,14 @@ public class MonthlyController {
      */
     @GetMapping
     public ResponseEntity<AllArticlePageResponseDto> getCombinedArticleList(
-            @RequestParam(name = "date") String date, // YYYY-MM 형식
+            @RequestParam(name = "date", required = false) String date, // YYYY-MM 형식
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ) {
+        if (date == null) {
+            date = YearMonth.now().toString();
+        }
+
         AllArticlePageResponseDto responseDto = allArticleService.getArticlesByMonth(date, page, size);
         return ResponseEntity.ok(responseDto);
     }

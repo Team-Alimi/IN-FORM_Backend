@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,7 +49,11 @@ public class AllArticleService {
 
         // 두 리스트를 합병하고 정렬 (BaseArticle로 통합)
         List<BaseArticle> combinedList = Stream.concat(schoolList.stream(), clubList.stream())
-                .sorted((a, b) -> b.getArticleId().compareTo(a.getArticleId())) // PK 기준 정렬 (최신순 가정)
+                // [변경] 1순위: 시작 날짜(start_date) 오름차순, 2순위: 마감 날짜(due_date) 오름차순
+                .sorted(
+                        Comparator.comparing(BaseArticle::getStartDate)
+                                .thenComparing(BaseArticle::getDueDate)
+                )
                 .collect(Collectors.toList());
 
 
