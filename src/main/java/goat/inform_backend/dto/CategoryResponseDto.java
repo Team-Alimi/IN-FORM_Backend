@@ -8,6 +8,6 @@ public class CategoryResponseDto {
     private final String category_name;
 
     public CategoryResponseDto(Categories category) {
-        this.category_name = category.getCategoryName();
+        this.category_name = (category != null) ? category.getCategoryName() : null;
     }
 }

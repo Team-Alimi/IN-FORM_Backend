@@ -35,7 +35,7 @@ public class AllArticleListDto {
         if (entity instanceof SchoolArticles schoolArticle) {
             this.categories = new CategoryResponseDto(schoolArticle.getCategories());
         } else { // ClubArticles일 경우
-            this.categories = null;
+            this.categories = new CategoryResponseDto(null);
         }
     }
 }
