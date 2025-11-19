@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -12,8 +15,6 @@ import lombok.Setter;
 @Table(name = "club_articles")
 public class ClubArticles extends BaseArticle {
 
-    // ClubArticles만의 고유 필드: attachment (varbinary(MAX))
-    @Lob // ⭐️ Large Object (BLOB/CLOB) - 긴 바이너리 데이터를 담을 때 사용
-    @Column(name = "attachment")
-    private byte[] attachment; // Java에서 바이너리 데이터는 byte 배열로 처리합니다.
+    @OneToMany(mappedBy = "clubArticle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ClubAttachment> attachments = new ArrayList<>();
 }
