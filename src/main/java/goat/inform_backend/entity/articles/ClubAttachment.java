@@ -16,7 +16,7 @@ public class ClubAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "attachment_url", nullable = true, columnDefinition = "TEXT")
+    @Column(name = "attachment_url", nullable = false, columnDefinition = "TEXT")
     private String attachmentUrl;
 
 
