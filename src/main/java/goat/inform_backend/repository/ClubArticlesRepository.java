@@ -26,4 +26,6 @@ public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Inte
             @Param("date1") LocalDate date1,
             Pageable pageable
     );
+
+    Page<ClubArticles> findByDueDateBetween(LocalDate start, LocalDate end, Pageable pageable);
 }

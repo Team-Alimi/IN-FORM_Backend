@@ -103,4 +103,36 @@ public class ClubArticleService {
 
         return new MonthlyClubArticlePageResponseDto(pageInfo, dtoList);
     }
+
+    /**
+     * 마감 임박 동아리 게시글 조회 (오늘 ~ 5일 뒤)
+     * GET /api/v1/deadline/club_articles
+     * 응답 형태가 월별 조회와 동일(첨부파일 X)하므로 Monthly DTO 재사용
+     */
+    public MonthlyClubArticlePageResponseDto getDeadlineArticles(int page, int size) {
+
+        // 날짜 계산 (오늘 ~ 5일 뒤)
+        LocalDate today = LocalDate.now();
+        LocalDate fiveDaysLater = today.plusDays(5);
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Order.asc("dueDate"))
+        );
+
+        Page<ClubArticles> articlePage = clubArticlesRepository.findByDueDateBetween(today, fiveDaysLater, pageable);
+
+        List<MonthlyClubArticleListDto> dtoList = articlePage.getContent().stream()
+                .map(MonthlyClubArticleListDto::new)
+                .collect(Collectors.toList());
+
+        PageInfo pageInfo = new PageInfo(
+                articlePage.getNumber() + 1,
+                articlePage.getTotalPages(),
+                articlePage.getTotalElements()
+        );
+
+        return new MonthlyClubArticlePageResponseDto(pageInfo, dtoList);
+    }
 }
