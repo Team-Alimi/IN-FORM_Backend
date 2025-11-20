@@ -27,4 +27,6 @@ public interface SchoolArticlesRepository extends JpaRepository<SchoolArticles, 
             @Param("date1") LocalDate date1,
             Pageable pageable
     );
+
+    Page<SchoolArticles> findByDueDateBetween(LocalDate start, LocalDate end, Pageable pageable);
 }

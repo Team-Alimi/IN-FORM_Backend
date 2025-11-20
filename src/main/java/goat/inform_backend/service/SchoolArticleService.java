@@ -84,7 +84,7 @@ public class SchoolArticleService {
     }
 
     /**
-     * [추가] 특정 달에 포함된 학교 글 목록 조회
+     * 특정 달에 포함된 학교 글 목록 조회
      * GET /api/v1/monthly/school_articles
      */
     public SchoolArticlePageResponseDto getArticlesByMonth(String dateString, int page, int size) {
@@ -102,6 +102,38 @@ public class SchoolArticleService {
 
         // 조건: 글의 시작일 <= 월의 마지막날 AND 글의 마감일 >= 월의 첫날
         Page<SchoolArticles> articlePage = schoolArticlesRepository.findMonthlyArticles(endOfMonth, startOfMonth, pageable);
+
+        List<SchoolArticleListDto> dtoList = articlePage.getContent().stream()
+                .map(SchoolArticleListDto::new)
+                .collect(Collectors.toList());
+
+        PageInfo pageInfo = new PageInfo(
+                articlePage.getNumber() + 1,
+                articlePage.getTotalPages(),
+                articlePage.getTotalElements()
+        );
+
+        return new SchoolArticlePageResponseDto(pageInfo, dtoList);
+    }
+
+    /**
+     * 마감 임박 학교 게시글 조회 (오늘 ~ 5일 뒤)
+     * GET /api/v1/deadline/school_articles
+     */
+    public SchoolArticlePageResponseDto getDeadlineArticles(int page, int size) {
+
+        // 날짜 계산 (오늘 ~ 5일 뒤)
+        LocalDate today = LocalDate.now();
+        LocalDate fiveDaysLater = today.plusDays(5);
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Order.asc("dueDate"))
+        );
+
+        Page<SchoolArticles> articlePage = schoolArticlesRepository.findByDueDateBetween(today, fiveDaysLater, pageable);
+
 
         List<SchoolArticleListDto> dtoList = articlePage.getContent().stream()
                 .map(SchoolArticleListDto::new)
