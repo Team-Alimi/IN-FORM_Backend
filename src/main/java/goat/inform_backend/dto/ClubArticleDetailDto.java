@@ -2,6 +2,7 @@ package goat.inform_backend.dto;
 
 import goat.inform_backend.entity.articles.ClubArticles;
 import goat.inform_backend.entity.articles.ClubAttachment;
+import goat.inform_backend.entity.vendors.Vendors;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class ClubArticleDetailDto {
     //URL 전체 목록
     private final List<String> attachment_urls;
 
-    private final VendorResponseDto vendors;
+    private final VendorDto vendors;
 
     public ClubArticleDetailDto(ClubArticles entity) {
         this.article_id = entity.getArticleId();
@@ -40,6 +41,15 @@ public class ClubArticleDetailDto {
                 .map(ClubAttachment::getAttachmentUrl)
                 .collect(Collectors.toList());
 
-        this.vendors = new VendorResponseDto(entity.getVendors());
+        this.vendors = new VendorDto(entity.getVendors());
+    }
+
+    @Getter
+    private static class VendorDto {
+        private final String vendor_name;
+
+        public VendorDto(Vendors vendor) {
+            this.vendor_name = vendor.getVendorName();
+        }
     }
 }

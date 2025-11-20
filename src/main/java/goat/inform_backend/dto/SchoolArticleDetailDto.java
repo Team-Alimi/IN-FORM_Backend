@@ -1,6 +1,7 @@
 package goat.inform_backend.dto;
 
 import goat.inform_backend.entity.articles.SchoolArticles;
+import goat.inform_backend.entity.vendors.Vendors;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ public class SchoolArticleDetailDto {
     private final LocalDate created_at;
     private final LocalDate updated_at;
 
-    private final VendorResponseDto vendors;
+    private final VendorDto vendors;
     private final CategoryResponseDto categories;
 
     public SchoolArticleDetailDto(SchoolArticles entity) {
@@ -29,7 +30,16 @@ public class SchoolArticleDetailDto {
         this.created_at = entity.getCreatedAt();
         this.updated_at = entity.getUpdatedAt();
 
-        this.vendors = new VendorResponseDto(entity.getVendors());
+        this.vendors = new VendorDto(entity.getVendors());
         this.categories = new CategoryResponseDto(entity.getCategories());
+    }
+
+    @Getter
+    private static class VendorDto {
+        private final String vendor_name;
+
+        public VendorDto(Vendors vendor) {
+            this.vendor_name = vendor.getVendorName();
+        }
     }
 }

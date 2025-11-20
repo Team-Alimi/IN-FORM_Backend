@@ -15,7 +15,6 @@ public class SchoolArticleListDto {
     private final LocalDate created_at;
     private final LocalDate updated_at;
 
-    //중첩 객체
     private final VendorDto vendors;
     private final CategoryResponseDto categories;
 
@@ -32,7 +31,7 @@ public class SchoolArticleListDto {
     }
 
     @Getter
-    public static class VendorDto {
+    private static class VendorDto {
         private final String vendor_name;
 
         public VendorDto(Vendors vendor) {
