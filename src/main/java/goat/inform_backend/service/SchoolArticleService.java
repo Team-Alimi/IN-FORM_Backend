@@ -10,9 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,5 +81,38 @@ public class SchoolArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. ID=" + articleId));
 
         return new SchoolArticleDetailDto(article);
+    }
+
+    /**
+     * [추가] 특정 달에 포함된 학교 글 목록 조회
+     * GET /api/v1/monthly/school_articles
+     */
+    public SchoolArticlePageResponseDto getArticlesByMonth(String dateString, int page, int size) {
+
+
+        YearMonth yearMonth = YearMonth.parse(dateString);
+        LocalDate startOfMonth = yearMonth.atDay(1);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Order.asc("startDate"), Sort.Order.asc("dueDate"))
+        );
+
+        // 조건: 글의 시작일 <= 월의 마지막날 AND 글의 마감일 >= 월의 첫날
+        Page<SchoolArticles> articlePage = schoolArticlesRepository.findMonthlyArticles(endOfMonth, startOfMonth, pageable);
+
+        List<SchoolArticleListDto> dtoList = articlePage.getContent().stream()
+                .map(SchoolArticleListDto::new)
+                .collect(Collectors.toList());
+
+        PageInfo pageInfo = new PageInfo(
+                articlePage.getNumber() + 1,
+                articlePage.getTotalPages(),
+                articlePage.getTotalElements()
+        );
+
+        return new SchoolArticlePageResponseDto(pageInfo, dtoList);
     }
 }

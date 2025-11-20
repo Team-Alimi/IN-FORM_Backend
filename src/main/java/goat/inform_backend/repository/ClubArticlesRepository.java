@@ -19,4 +19,11 @@ public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Inte
     List<ClubArticles> findByStartDateLessThanEqualAndDueDateGreaterThanEqual(
             @Param("date2") LocalDate date2, @Param("date1") LocalDate date1
     );
+
+    @Query("SELECT a FROM ClubArticles a WHERE a.startDate <= :date2 AND a.dueDate >= :date1")
+    Page<ClubArticles> findMonthlyArticles(
+            @Param("date2") LocalDate date2,
+            @Param("date1") LocalDate date1,
+            Pageable pageable
+    );
 }

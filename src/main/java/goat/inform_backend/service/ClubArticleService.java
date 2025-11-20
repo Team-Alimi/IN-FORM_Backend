@@ -1,18 +1,18 @@
 package goat.inform_backend.service;
 
-import goat.inform_backend.dto.ClubArticleListDto;
-import goat.inform_backend.dto.ClubArticlePageResponseDto;
-import goat.inform_backend.dto.ClubArticleDetailDto;
-import goat.inform_backend.dto.PageInfo;
+import goat.inform_backend.dto.*;
 import goat.inform_backend.entity.articles.ClubArticles;
 import goat.inform_backend.repository.ClubArticlesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,5 +67,40 @@ public class ClubArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. ID=" + articleId));
 
         return new ClubArticleDetailDto(article);
+    }
+
+    /**
+     * [특정 달 동아리 글 목록 조회]
+     */
+    public MonthlyClubArticlePageResponseDto getArticlesByMonth(String dateString, int page, int size) {
+
+
+        YearMonth yearMonth = YearMonth.parse(dateString);
+        LocalDate startOfMonth = yearMonth.atDay(1);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+
+        Pageable pageable = PageRequest.of(
+                page - 1,
+                size,
+                Sort.by(Sort.Order.asc("startDate"), Sort.Order.asc("dueDate"))
+        );
+
+
+        Page<ClubArticles> articlePage = clubArticlesRepository.findMonthlyArticles(endOfMonth, startOfMonth, pageable);
+
+
+        List<MonthlyClubArticleListDto> dtoList = articlePage.getContent().stream()
+                .map(MonthlyClubArticleListDto::new)
+                .collect(Collectors.toList());
+
+
+        PageInfo pageInfo = new PageInfo(
+                articlePage.getNumber() + 1,
+                articlePage.getTotalPages(),
+                articlePage.getTotalElements()
+        );
+
+        return new MonthlyClubArticlePageResponseDto(pageInfo, dtoList);
     }
 }

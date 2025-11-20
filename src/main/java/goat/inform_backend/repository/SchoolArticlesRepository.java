@@ -20,4 +20,11 @@ public interface SchoolArticlesRepository extends JpaRepository<SchoolArticles, 
     @Query("SELECT a FROM SchoolArticles a WHERE a.startDate <= :date2 AND a.dueDate >= :date1")
     List<SchoolArticles> findByStartDateLessThanEqualAndDueDateGreaterThanEqual(
             @Param("date2") LocalDate date2, @Param("date1") LocalDate date1);
+
+    @Query("SELECT a FROM SchoolArticles a WHERE a.startDate <= :date2 AND a.dueDate >= :date1")
+    Page<SchoolArticles> findMonthlyArticles(
+            @Param("date2") LocalDate date2,
+            @Param("date1") LocalDate date1,
+            Pageable pageable
+    );
 }

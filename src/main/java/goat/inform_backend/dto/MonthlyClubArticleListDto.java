@@ -1,13 +1,13 @@
 package goat.inform_backend.dto;
 
-import goat.inform_backend.entity.articles.SchoolArticles;
+import goat.inform_backend.entity.articles.ClubArticles;
 import goat.inform_backend.entity.vendors.Vendors;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class SchoolArticleListDto {
+public class MonthlyClubArticleListDto {
     private final Integer article_id;
     private final String title;
     private final LocalDate start_date;
@@ -15,11 +15,9 @@ public class SchoolArticleListDto {
     private final LocalDate created_at;
     private final LocalDate updated_at;
 
-    //중첩 객체
-    private final VendorDto vendors;
-    private final CategoryResponseDto categories;
+    private final SimpleVendorDto vendors;
 
-    public SchoolArticleListDto(SchoolArticles entity) {
+    public MonthlyClubArticleListDto(ClubArticles entity) {
         this.article_id = entity.getArticleId();
         this.title = entity.getTitle();
         this.start_date = entity.getStartDate();
@@ -27,15 +25,15 @@ public class SchoolArticleListDto {
         this.created_at = entity.getCreatedAt();
         this.updated_at = entity.getUpdatedAt();
 
-        this.vendors = new VendorDto(entity.getVendors());
-        this.categories = new CategoryResponseDto(entity.getCategories());
+        this.vendors = new SimpleVendorDto(entity.getVendors());
     }
 
+
     @Getter
-    public static class VendorDto {
+    public static class SimpleVendorDto {
         private final String vendor_name;
 
-        public VendorDto(Vendors vendor) {
+        public SimpleVendorDto(Vendors vendor) {
             this.vendor_name = vendor.getVendorName();
         }
     }
