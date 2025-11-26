@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Integer> {
@@ -28,4 +29,7 @@ public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Inte
     );
 
     Page<ClubArticles> findByDueDateBetween(LocalDate start, LocalDate end, Pageable pageable);
+
+    @Query(value = "SELECT * FROM club_articles ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    Optional<ClubArticles> findRandomArticle();
 }

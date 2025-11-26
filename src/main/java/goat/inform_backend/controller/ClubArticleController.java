@@ -1,5 +1,6 @@
 package goat.inform_backend.controller;
 
+import goat.inform_backend.dto.ClubArticleListDto;
 import goat.inform_backend.dto.ClubArticlePageResponseDto;
 import goat.inform_backend.dto.ClubArticleDetailDto;
 import goat.inform_backend.service.ClubArticleService;
@@ -42,6 +43,16 @@ public class ClubArticleController {
             @PathVariable Integer articleId
     ) {
         ClubArticleDetailDto responseDto = clubArticleService.getArticleDetail(articleId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 동아리 게시글 중 랜덤 1개 조회
+     * [GET /api/v1/club_articles/random]
+     */
+    @GetMapping("/random")
+    public ResponseEntity<ClubArticleListDto> getRandomArticle() {
+        ClubArticleListDto responseDto = clubArticleService.getRandomArticle();
         return ResponseEntity.ok(responseDto);
     }
 }

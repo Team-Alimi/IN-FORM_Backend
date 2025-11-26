@@ -135,4 +135,15 @@ public class ClubArticleService {
 
         return new MonthlyClubArticlePageResponseDto(pageInfo, dtoList);
     }
+
+    /**
+     * 동아리 게시글 중 랜덤 1개 조회
+     * [GET /api/v1/club_articles/random]
+     */
+    public ClubArticleListDto getRandomArticle() { // 반환 타입 변경: ClubArticleDetailDto -> ClubArticleListDto
+        ClubArticles article = clubArticlesRepository.findRandomArticle()
+                .orElseThrow(() -> new IllegalArgumentException("조회할 수 있는 동아리 게시글이 없습니다."));
+
+        return new ClubArticleListDto(article);
+    }
 }
