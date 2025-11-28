@@ -3,6 +3,7 @@ package goat.inform_backend.controller;
 import goat.inform_backend.dto.ClubArticleListDto;
 import goat.inform_backend.dto.ClubArticlePageResponseDto;
 import goat.inform_backend.dto.ClubArticleDetailDto;
+import goat.inform_backend.dto.RandomClubArticleResponseDto;
 import goat.inform_backend.service.ClubArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,12 +50,12 @@ public class ClubArticleController {
     }
 
     /**
-     * 동아리 게시글 중 랜덤 1개 조회
+     * 동아리 게시글 중 랜덤 5개 조회
      * [GET /api/v1/club_articles/random]
      */
     @GetMapping("/random")
-    public ResponseEntity<ClubArticleListDto> getRandomArticle() {
-        ClubArticleListDto responseDto = clubArticleService.getRandomArticle();
+    public ResponseEntity<RandomClubArticleResponseDto> getRandomArticles() {
+        RandomClubArticleResponseDto responseDto = clubArticleService.getRandomArticles();
         return ResponseEntity.ok(responseDto);
     }
 }

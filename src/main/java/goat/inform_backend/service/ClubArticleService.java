@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,14 +137,19 @@ public class ClubArticleService {
         return new MonthlyClubArticlePageResponseDto(pageInfo, dtoList);
     }
 
+
     /**
-     * 동아리 게시글 중 랜덤 1개 조회
+     * 동아리 게시글 중 랜덤 5개 조회
      * [GET /api/v1/club_articles/random]
      */
-    public ClubArticleListDto getRandomArticle() { // 반환 타입 변경: ClubArticleDetailDto -> ClubArticleListDto
-        ClubArticles article = clubArticlesRepository.findRandomArticle()
-                .orElseThrow(() -> new IllegalArgumentException("조회할 수 있는 동아리 게시글이 없습니다."));
+    public RandomClubArticleResponseDto getRandomArticles() {
+        List<ClubArticles> articles = clubArticlesRepository.findRandomArticles();
 
-        return new ClubArticleListDto(article);
+        List<ClubArticleListDto> dtoList = articles.stream()
+                .map(ClubArticleListDto::new)
+                .collect(Collectors.toList());
+
+        // Wrapper DTO로 감싸서 반환
+        return new RandomClubArticleResponseDto(dtoList);
     }
 }

@@ -10,13 +10,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Integer> {
     Page<ClubArticles> findByTitleContaining(String search, Pageable pageable);
 
-    @Query("SELECT a FROM ClubArticles a WHERE a.startDate <= :date2 AND a.dueDate >= :date1")
+    @Query("SELECT a FROM ClubArticles a WHERE a.startDate <= :date2 AND a.dueDate >= :date1 AND (a.title LIKE '%행사%' OR a.title LIKE '%대회%')")
     List<ClubArticles> findByStartDateLessThanEqualAndDueDateGreaterThanEqual(
             @Param("date2") LocalDate date2, @Param("date1") LocalDate date1
     );
@@ -30,6 +29,6 @@ public interface ClubArticlesRepository extends JpaRepository<ClubArticles, Inte
 
     Page<ClubArticles> findByDueDateBetween(LocalDate start, LocalDate end, Pageable pageable);
 
-    @Query(value = "SELECT * FROM club_articles ORDER BY RAND() LIMIT 1", nativeQuery = true)
-    Optional<ClubArticles> findRandomArticle();
+    @Query(value = "SELECT * FROM club_articles ORDER BY RAND() LIMIT 5", nativeQuery = true)
+    List<ClubArticles> findRandomArticles();
 }
